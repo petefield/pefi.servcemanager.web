@@ -1,0 +1,71 @@
+﻿@page "/"
+
+@inject ServiceManagerClient _client;
+@inject NavigationManager navigationManager;
+
+<PageTitle>Services</PageTitle>
+
+<h1>Services</h1>
+
+@if (services == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <div class="top-row">
+        <a href="services/create" >New</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Host. </th>
+                <th>Container Port</th>
+                <th>Host Port</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var service in services)
+            {
+                <tr>
+                    <td>@service.serviceName</td>
+                    <td>@service.hostName</td>
+                    <td>@service.containerPortNumber</td>
+                    <td>@service.hostPortNumber</td>
+                    <td><button @onclick="@(e => Delete(service.serviceName))">delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IReadOnlyCollection<GetServiceResponse> services;
+
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync() => await LoadServices();
+   
+    private async Task LoadServices() 
+        => services = await _client.Get_All_ServicesAsync();
+
+    private async Task Delete(string serviceName)
+    {
+        try
+        {
+            await _client.Delete_ServiceAsync(serviceName);
+            await LoadServices();
+            ToastService.Notify(new(ToastType.Success, $"Service '{serviceName}' details deleted successfully."));
+
+        }
+        catch (Exception ex)
+        {
+            ToastService.Notify(new(ToastType.Danger, $"Error: {ex.Message}."));
+
+            throw;
+        }
+    }
+}

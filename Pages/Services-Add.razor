@@ -1,0 +1,49 @@
+﻿@page "/services/create"
+
+@inject ServiceManagerClient _client;
+@inject NavigationManager navigationManager;
+
+<PageTitle>Create Service</PageTitle>
+
+<h1>Enter Service Details</h1>
+
+<form method="post" @onsubmit="Submit" @formname="create-service-form">
+    <div class="form-group">
+        <label for="serviceName">Service Name</label>
+        <InputText id="serviceName" class="form-control" @bind-Value="request!.serviceName" />
+    </div>
+
+    <div class="form-group">
+        <label for="hostName">Host Name</label>
+        <InputText id="hostName" class="form-control" @bind-Value="request!.hostName" />
+    </div>
+
+    <div class="form-group">
+        <label for="hostPort">Host Port</label>
+        <InputText id="hostPort" class="form-control" @bind-Value="request!.hostPortNumber" />
+    </div>
+
+    <div class="form-group">
+        <label for="containerPort">Container Port</label>
+        <InputText id="containerPort" class="form-control" @bind-Value="request!.containerPortNumber" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+@code {
+
+    private CreateServiceRequest request;
+
+    protected override async Task OnInitializedAsync()
+    {
+        request = new CreateServiceRequest();
+    }
+
+    private async Task Submit()
+    {
+        await _client.Create_Service_All_ServicesAsync(request);
+        navigationManager.NavigateTo("/");
+    }
+}

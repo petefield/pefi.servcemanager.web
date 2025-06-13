@@ -5,7 +5,8 @@ using pefi.servicemanager.web;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://192.168.0.5:5550") });
 
+builder.Services.AddHttpClient<ServiceManagerClient>(c => c.BaseAddress = new Uri("http://192.168.0.5:5550"));
 await builder.Build().RunAsync();
