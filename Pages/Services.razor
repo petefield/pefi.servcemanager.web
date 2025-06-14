@@ -35,7 +35,8 @@ else
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Host. </th>
+                        <th>Host</th>
+                        <th>Container Image</th>
                         <th>Container Port</th>
                         <th>Host Port</th>
                         <th></th>
@@ -47,6 +48,7 @@ else
                         <tr>
                             <td>@service.serviceName</td>
                             <td>@service.hostName</td>
+                            <td>@service.dockerImageUrl</td>
                             <td>@service.containerPortNumber</td>
                             <td>@service.hostPortNumber</td>
                             <td>
