@@ -13,42 +13,62 @@
 }
 else
 {
+    <Modal @ref="modal" /> 
 
-    <div class="top-row">
-        <a href="services/create" >New</a>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-outline-primary"
+                @onclick="@(e => navigationManager.NavigateTo("/services/create"))"> 
+                <Icon Name="IconName.Plus" 
+                Color="IconColor.Primary" />
+            </button>
+
+        </div>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Host. </th>
-                <th>Container Port</th>
-                <th>Host Port</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var service in services)
-            {
-                <tr>
-                    <td>@service.serviceName</td>
-                    <td>@service.hostName</td>
-                    <td>@service.containerPortNumber</td>
-                    <td>@service.hostPortNumber</td>
-                    <td><button @onclick="@(e => Delete(service.serviceName))">delete</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-12">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Host. </th>
+                        <th>Container Port</th>
+                        <th>Host Port</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var service in services)
+                    {
+                        <tr>
+                            <td>@service.serviceName</td>
+                            <td>@service.hostName</td>
+                            <td>@service.containerPortNumber</td>
+                            <td>@service.hostPortNumber</td>
+                            <td>
+                                <button class="btn btn-outline-danger" @onclick="@(e => ConfirmDelete(service.serviceName))"> <Icon Name="IconName.Trash" Color="IconColor.Danger" /></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
 
 @code {
     private IReadOnlyCollection<GetServiceResponse> services;
+    private Modal modal = default!;
 
     [Inject] protected ToastService ToastService { get; set; } = default!;
 
+
     protected override async Task OnInitializedAsync() => await LoadServices();
-   
+
     private async Task LoadServices() 
         => services = await _client.Get_All_ServicesAsync();
 
@@ -59,13 +79,27 @@ else
             await _client.Delete_ServiceAsync(serviceName);
             await LoadServices();
             ToastService.Notify(new(ToastType.Success, $"Service '{serviceName}' details deleted successfully."));
-
         }
         catch (Exception ex)
         {
             ToastService.Notify(new(ToastType.Danger, $"Error: {ex.Message}."));
-
-            throw;
         }
     }
+
+    private async Task ConfirmDelete(string serviceName)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Name", serviceName);
+        parameters.Add("OnConfirm", EventCallback.Factory.Create(this, async () => {
+            await modal.HideAsync();
+            await Delete(serviceName); 
+        }));
+        parameters.Add("OnReject", EventCallback.Factory.Create(this,  async () =>
+        {
+            await modal.HideAsync();
+        }));
+
+        await modal.ShowAsync<ConfirmDelete>(title : "Confirm Delete?", parameters: parameters);
+    }
+
 }

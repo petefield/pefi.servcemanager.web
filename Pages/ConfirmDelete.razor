@@ -1,0 +1,14 @@
+﻿<h3>ConfirmDelete</h3>
+
+<p>Are you sure you want to delete `@Name`?</p>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button @onclick="OnReject" class="btn btn-warning">No</button>
+    <button @onclick="OnConfirm" class="btn btn-success">Yes</button>
+</div>
+
+@code {
+    [Parameter] public string Name { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnReject { get; set; }
+}
