@@ -69,12 +69,7 @@
 
 @code {
 
-    private CreateServiceRequest request;
-
-    protected override async Task OnInitializedAsync()
-    {
-        request = new CreateServiceRequest();
-    }
+    private CreateServiceRequest request = new();
 
     private async Task Submit()
     {

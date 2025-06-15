@@ -45,16 +45,19 @@ else
                 <tbody>
                     @foreach (var service in services)
                     {
-                        <tr>
-                            <td>@service.serviceName</td>
-                            <td>@service.hostName</td>
-                            <td>@service.dockerImageUrl</td>
-                            <td>@service.containerPortNumber</td>
-                            <td>@service.hostPortNumber</td>
-                            <td>
-                                <button class="btn btn-outline-danger" @onclick="@(e => ConfirmDelete(service.serviceName))"> <Icon Name="IconName.Trash" Color="IconColor.Danger" /></button>
-                            </td>
-                        </tr>
+                        if(service?.serviceName is not null)
+                        {
+                            <tr>
+                                <td>@service.serviceName</td>
+                                <td>@service.hostName</td>
+                                <td>@service.dockerImageUrl</td>
+                                <td>@service.containerPortNumber</td>
+                                <td>@service.hostPortNumber</td>
+                                <td>
+                                    <button class="btn btn-outline-danger" @onclick="@(e => ConfirmDelete(service.serviceName))"> <Icon Name="IconName.Trash" Color="IconColor.Danger" /></button>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -63,7 +66,7 @@ else
 }
 
 @code {
-    private IReadOnlyCollection<GetServiceResponse> services;
+    private IReadOnlyCollection<GetServiceResponse> services =[];
     private Modal modal = default!;
 
     [Inject] protected ToastService ToastService { get; set; } = default!;

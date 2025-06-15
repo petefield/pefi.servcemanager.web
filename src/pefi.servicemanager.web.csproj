@@ -1,17 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="service_mgr_openapi.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="service_mgr_openapi.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.16" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
-    <PackageReference Include="pefi.http" Version="1.0.26" />
+    <PackageReference Include="pefi.http" Version="1.0.0-ci-20250614.3" />
   </ItemGroup>
 
 </Project>

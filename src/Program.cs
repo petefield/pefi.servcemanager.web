@@ -9,4 +9,7 @@ builder.Services.AddBlazorBootstrap();
 
 
 builder.Services.AddHttpClient<ServiceManagerClient>(c => c.BaseAddress = new Uri("http://192.168.0.5:5550"));
+
+
+
 await builder.Build().RunAsync();
