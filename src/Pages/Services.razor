@@ -52,7 +52,6 @@
                 }
                 else
                 {
-
                     @foreach (var service in services)
                     {
                         if (service?.serviceName is not null)
@@ -95,7 +94,7 @@
         {
             ToastService.Notify(new(ToastType.Danger, $"Services could not be loaded"));
             services = [];
-            Services_Error = "Services Could Not Be Loaded"
+            Services_Error = $"Services Could Not Be Loaded {ex.Message}";
         }
     }
 
