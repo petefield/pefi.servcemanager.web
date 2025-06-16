@@ -88,7 +88,7 @@
     private async Task LoadServices() {
         try
         {
-            await _client.Get_All_ServicesAsync();
+            services = await _client.Get_All_ServicesAsync();
         }
         catch (Exception ex)
         {
