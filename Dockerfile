@@ -1,5 +1,5 @@
 ﻿# Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy just the project file and restore
