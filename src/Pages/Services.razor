@@ -7,29 +7,26 @@
 
 <h1>Services</h1>
 
-@if (services == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <Modal @ref="modal" /> 
 
-    <div class="row">
-        <div class="col-12">
-            <button class="btn btn-outline-primary"
-                @onclick="@(e => navigationManager.NavigateTo("/services/create"))"> 
-                <Icon Name="IconName.Plus" 
-                Color="IconColor.Primary" />
-            </button>
 
-        </div>
+<Modal @ref="modal" /> 
+
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-outline-primary"
+        @onclick="@(e => navigationManager.NavigateTo("/services/create"))"> 
+            <Icon Name="IconName.Plus" 
+            Color="IconColor.Primary" />
+        </button>
+
     </div>
+</div>
 
-    <hr />
+<hr />
 
-    <div class="row">
-        <div class="col-12">
+<div class="row">
+
+    <div class="col-12">
 
             <table class="table">
                 <thead>
@@ -42,10 +39,20 @@ else
                         <th></th>
                     </tr>
                 </thead>
+
+                @if (services is null)
+                {
+                    <tr>
+                        <td colspan="6">     <p class="text-center"><em>Loading...</em></p></td>
+                    </tr>
+                }
+            else
+            {
                 <tbody>
+
                     @foreach (var service in services)
                     {
-                        if(service?.serviceName is not null)
+                        if (service?.serviceName is not null)
                         {
                             <tr>
                                 <td>@service.serviceName</td>
@@ -59,14 +66,18 @@ else
                             </tr>
                         }
                     }
+               
                 </tbody>
+            }
             </table>
-        </div>
+     
+
     </div>
-}
+</div>
+
 
 @code {
-    private IReadOnlyCollection<GetServiceResponse> services =[];
+    private IReadOnlyCollection<GetServiceResponse>? services;
     private Modal modal = default!;
 
     [Inject] protected ToastService ToastService { get; set; } = default!;
@@ -74,8 +85,18 @@ else
 
     protected override async Task OnInitializedAsync() => await LoadServices();
 
-    private async Task LoadServices() 
-        => services = await _client.Get_All_ServicesAsync();
+    private async Task LoadServices() {
+        try
+        {
+            await _client.Get_All_ServicesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            ToastService.Notify(new(ToastType.Danger, $"Services could not be loaded"));
+            services = [];
+        }
+    }
 
     private async Task Delete(string serviceName)
     {

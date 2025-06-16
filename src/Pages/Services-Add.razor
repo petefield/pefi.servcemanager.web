@@ -71,6 +71,9 @@
 
     private CreateServiceRequest request = new();
 
+    protected override async Task OnInitializedAsync() => await Task.CompletedTask;
+
+
     private async Task Submit()
     {
         await _client.Create_ServiceAsync(request);
