@@ -28,27 +28,30 @@
 
     <div class="col-12">
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Host</th>
-                        <th>Container Image</th>
-                        <th>Container Port</th>
-                        <th>Host Port</th>
-                        <th></th>
-                    </tr>
-                </thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Host</th>
+                    <th>Container Image</th>
+                    <th>Container Port</th>
+                    <th>Host Port</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
 
                 @if (services is null)
                 {
                     <tr>
-                        <td colspan="6">     <p class="text-center"><em>Loading...</em></p></td>
+                        <td class="text-center"  colspan="6">
+                            <img height="100px" src="/images/loading.gif" />
+                            <p>Loading services...</p>
+                        </td>
                     </tr>
                 }
-            else
-            {
-                <tbody>
+                else
+                {
 
                     @foreach (var service in services)
                     {
@@ -66,22 +69,20 @@
                             </tr>
                         }
                     }
-               
-                </tbody>
-            }
-            </table>
-     
+
+                }   
+            </tbody>
+        </table>
 
     </div>
 </div>
 
-
 @code {
     private IReadOnlyCollection<GetServiceResponse>? services;
     private Modal modal = default!;
+    private string Services_Error = string.Empty;
 
     [Inject] protected ToastService ToastService { get; set; } = default!;
-
 
     protected override async Task OnInitializedAsync() => await LoadServices();
 
@@ -89,12 +90,12 @@
         try
         {
             await _client.Get_All_ServicesAsync();
-
         }
         catch (Exception ex)
         {
             ToastService.Notify(new(ToastType.Danger, $"Services could not be loaded"));
             services = [];
+            Services_Error = "Services Could Not Be Loaded"
         }
     }
 
