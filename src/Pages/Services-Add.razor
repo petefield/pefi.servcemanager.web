@@ -70,6 +70,7 @@
 @code {
 
     private CreateServiceRequest request = new();
+    [Inject] protected ToastService ToastService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync() => await Task.CompletedTask;
 
@@ -77,6 +78,8 @@
     private async Task Submit()
     {
         await _client.Create_ServiceAsync(request);
+        ToastService.Notify(new(ToastType.Success, $"Service details created successfully."));
+
         navigationManager.NavigateTo("/");
     }
 }
